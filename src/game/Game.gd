@@ -17,7 +17,14 @@ func _spawn_region(next_region: int) -> void:
 	_region = Data.regions[next_region].instance()
 	_region.connect("exited", self, "_on_region_exited")
 	add_child(_region)
-
+	
+	var size = _region.ground.get_used_rect().size * Region.TILE_SIZE
+	
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_bottom = size.y
+	camera.limit_right = size.x
+	
 
 func _on_region_exited(next_region: int, next_exit: int) -> void:
 	call_deferred("_change_region", next_region, next_exit)

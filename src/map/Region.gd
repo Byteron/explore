@@ -13,8 +13,8 @@ signal exited(next_region, next_exit)
 
 onready var exits := $Exits.get_children()
 
-onready var ground = $Ground
-onready var walls = $Walls
+onready var ground: TileMap = $Ground
+onready var walls: TileMap = $Walls
 
 onready var spawn_point: Vector2 = $Spawn.position
 
