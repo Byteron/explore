@@ -9,6 +9,8 @@ script = ExtResource( 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 158, 76 )
+acceleration = 1000.0
+friction = 0.2
 
 [node name="ZoneCamera" type="Camera2D" parent="."]
 current = true

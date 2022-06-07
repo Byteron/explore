@@ -1,9 +1,14 @@
 extends Character
 class_name Player
 
+var velocity : Vector2
+
 export var speed := 72.0
+export var acceleration := 1000.0
+export var friction := 0.2
 
 onready var scan_area: ScanArea2D = $ScanArea2D
+
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("attack"):
@@ -14,11 +19,18 @@ func _unhandled_input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	var direction = get_direction()
 	
+	if not direction.x: velocity.x = lerp(velocity.x, 0.0, friction)
+	if not direction.y: velocity.y = lerp(velocity.y, 0.0, friction)
+	
 	if not direction: return
+	
 	
 	scan_area.look_at(scan_area.global_position + direction)
 	
-	move_and_slide(direction * speed, Vector2.UP)
+	velocity += direction * acceleration * delta
+	velocity = velocity.clamped(speed)
+	
+	move_and_slide(velocity, Vector2.UP)
 
 
 func hit() -> void:
