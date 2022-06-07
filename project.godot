@@ -19,11 +19,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/character/Character.gd"
 }, {
-"base": "Node",
-"class": "Controllable",
-"language": "GDScript",
-"path": "res://src/character/Controllable.gd"
-}, {
 "base": "Area2D",
 "class": "Exit",
 "language": "GDScript",
@@ -67,7 +62,6 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Bush": "",
 "Character": "",
-"Controllable": "",
 "Exit": "",
 "Game": "",
 "HitArea2D": "",

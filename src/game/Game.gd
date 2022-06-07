@@ -9,8 +9,9 @@ onready var camera: ZoneCamera = $ZoneCamera
 
 func _ready() -> void:
 	_spawn_region(Region.Types.FOREST)
-	
 	player.position = _region.spawn_point
+	Fade.rect.color.a = 1.0
+	Fade.fade_in()
 
 
 func _spawn_region(next_region: int) -> void:
@@ -41,7 +42,6 @@ func _change_region(next_region: int, next_exit: int) -> void:
 	_spawn_region(next_region)
 	
 	player.position = _region.exits[next_exit].position
-	camera.position = Region.world2world(player.position)
 	
 	Fade.fade_in()
 	

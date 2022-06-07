@@ -7,7 +7,6 @@ enum Types {
 }
 
 const TILE_SIZE := Vector2(16, 16)
-const ZONE_SIZE := Vector2(21, 13)
 
 signal exited(next_region, next_exit)
 
@@ -26,15 +25,3 @@ func _ready() -> void:
 
 func _on_exit_exited(next_region: int, next_exit: int) -> void:
 	emit_signal("exited", next_region, next_exit)
-
-
-static func world2zone(position: Vector2) -> Vector2:
-	return (position / ZONE_SIZE / TILE_SIZE).floor()
-
-
-static func zone2world(zone: Vector2) -> Vector2:
-	return zone * TILE_SIZE * ZONE_SIZE
-
-	
-static func world2world(position: Vector2) -> Vector2:
-	return zone2world(world2zone(position))
