@@ -19,6 +19,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/character/Character.gd"
 }, {
+"base": "Reference",
+"class": "Combat",
+"language": "GDScript",
+"path": "res://src/combat/Combat.gd"
+}, {
+"base": "Node",
+"class": "Damage",
+"language": "GDScript",
+"path": "res://src/combat/Damage.gd"
+}, {
 "base": "Area2D",
 "class": "Exit",
 "language": "GDScript",
@@ -28,6 +38,11 @@ _global_script_classes=[ {
 "class": "Game",
 "language": "GDScript",
 "path": "res://src/game/Game.gd"
+}, {
+"base": "Node",
+"class": "Health",
+"language": "GDScript",
+"path": "res://src/combat/Health.gd"
 }, {
 "base": "Area2D",
 "class": "HitArea2D",
@@ -62,8 +77,11 @@ _global_script_classes=[ {
 _global_script_class_icons={
 "Bush": "",
 "Character": "",
+"Combat": "",
+"Damage": "",
 "Exit": "",
 "Game": "",
+"Health": "",
 "HitArea2D": "",
 "Player": "",
 "Region": "",

@@ -7,8 +7,10 @@ export var speed := 72.0
 export var acceleration := 1000.0
 export var friction := 0.2
 
-onready var scan_area: ScanArea2D = $ScanArea2D
+onready var health: Health = $Health
+onready var damage: Damage = $Damage
 
+onready var scan_area: ScanArea2D = $ScanArea2D
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("attack"):
@@ -36,7 +38,7 @@ func _process(delta: float) -> void:
 func hit() -> void:
 	for area in scan_area.get_overlapping_areas():
 		if area is HitArea2D:
-			area.hit()
+			area.hit(damage)
 
 
 func get_direction() -> Vector2:

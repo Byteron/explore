@@ -1,8 +1,8 @@
 extends Area2D
 class_name HitArea2D
 
-signal hit()
+signal hit(damage)
 
 
-func hit() -> void:
-	emit_signal("hit")
+func hit(damage: Damage) -> void:
+	emit_signal("hit", damage)
