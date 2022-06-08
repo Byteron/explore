@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/combat/Damage.gd"
 }, {
+"base": "KinematicBody2D",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://src/character/Enemy.gd"
+}, {
 "base": "Area2D",
 "class": "Exit",
 "language": "GDScript",
@@ -79,6 +84,7 @@ _global_script_class_icons={
 "Character": "",
 "Combat": "",
 "Damage": "",
+"Enemy": "",
 "Exit": "",
 "Game": "",
 "Health": "",

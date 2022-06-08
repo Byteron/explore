@@ -12,6 +12,10 @@ onready var damage: Damage = $Damage
 
 onready var scan_area: ScanArea2D = $ScanArea2D
 
+func _ready() -> void:
+	Data.player = self
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("attack"):
 		print("attack clicked")
