@@ -4,6 +4,8 @@ class_name Region
 enum Types {
 	FOREST,
 	MOUNTAINS,
+	SOUTH_SEA,
+	FOREST_CAVE,
 }
 
 const TILE_SIZE := Vector2(16, 16)
