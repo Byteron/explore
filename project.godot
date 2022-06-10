@@ -29,7 +29,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/combat/Damage.gd"
 }, {
-"base": "KinematicBody2D",
+"base": "Character",
 "class": "Enemy",
 "language": "GDScript",
 "path": "res://src/character/Enemy.gd"

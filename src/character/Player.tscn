@@ -1,26 +1,28 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/character/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/combat/Health.gd" type="Script" id=2]
 [ext_resource path="res://src/physics/ScanArea2D.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/character/Player.gd" type="Script" id=4]
 [ext_resource path="res://src/combat/Damage.gd" type="Script" id=5]
+[ext_resource path="res://src/physics/HitArea2D.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 6.0
 height = 10.0
 
+[sub_resource type="CircleShape2D" id=2]
+radius = 6.0
+
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 4 )
-speed = 72.0
-acceleration = 1000.0
-friction = 0.2
 
 [node name="Health" type="Node" parent="." index="0"]
 script = ExtResource( 2 )
 
 [node name="Damage" type="Node" parent="." index="1"]
 script = ExtResource( 5 )
+amount = 35
 
 [node name="ScanArea2D" parent="." index="4" instance=ExtResource( 3 )]
 position = Vector2( 0, -5 )
@@ -28,3 +30,17 @@ position = Vector2( 0, -5 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ScanArea2D" index="0"]
 position = Vector2( 12, 0 )
 shape = SubResource( 1 )
+
+[node name="ColorRect" type="ColorRect" parent="ScanArea2D/CollisionShape2D" index="0"]
+margin_left = -2.0
+margin_top = -2.0
+margin_right = 2.0
+margin_bottom = 2.0
+
+[node name="HitArea2D" parent="." index="5" instance=ExtResource( 6 )]
+position = Vector2( 0, -5 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea2D" index="0"]
+shape = SubResource( 2 )
+
+[connection signal="hit" from="HitArea2D" to="." method="_on_HitArea2D_hit"]

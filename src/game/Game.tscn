@@ -6,6 +6,7 @@
 
 [node name="Game" type="YSort"]
 script = ExtResource( 1 )
+start_level = 1
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 158, 76 )

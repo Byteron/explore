@@ -3,12 +3,14 @@ class_name Game
 
 var _region: Region
 
+export(Region.Types) var start_level := Region.Types.FOREST
+
 onready var player: Player = $Player
 onready var camera: ZoneCamera = $ZoneCamera
 
 
 func _ready() -> void:
-	_spawn_region(Region.Types.FOREST)
+	_spawn_region(start_level)
 	player.position = _region.spawn_point
 	Fade.rect.color.a = 1.0
 	Fade.fade_in()
