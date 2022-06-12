@@ -1,6 +1,5 @@
 using Explore.Core;
-using Explore.Components;
-using Explore.Nodes;
+using Explore.Nodes.Actors;
 using Godot;
 using RelEcs;
 using RelEcs.Godot;
@@ -15,7 +14,7 @@ public class InitPlayStateSystem : ISystem
         
         var game = GD.Load<PackedScene>("src/Nodes/Game.tscn").Instance<Game>();
         var camera = GD.Load<PackedScene>("src/Nodes/Region/RegionCamera.tscn").Instance<RegionCamera>();
-        var player = GD.Load<PackedScene>("src/Nodes/Player.tscn").Instance<Player>();
+        var player = GD.Load<PackedScene>("src/Nodes/Actors/Player.tscn").Instance<Player>();
 
         camera.Target = player;
         
@@ -23,13 +22,13 @@ public class InitPlayStateSystem : ISystem
         game.AddChild(player);
         
         state.AddChild(game);
-        
-        commands.Spawn(player).Add(new Speed { Value = 72f }).Add<Controllable>();
+
+        commands.Spawn(player);
 
         commands.AddElement(game);
         commands.AddElement(camera);
         commands.AddElement(player);
         
-        commands.Send(new LoadRegion { Region = "Forest", Exit = -1 });
+        commands.Send(new LoadRegion { Region = "Mountains", Exit = -1 });
     }
 }

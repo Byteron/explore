@@ -1,5 +1,5 @@
 namespace Explore.Components;
 
-public class Spawned
+public class IsSpawned
 {
 }

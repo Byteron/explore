@@ -1,3 +1,4 @@
+using Explore.Nodes.Actors;
 using Godot;
 
 namespace Explore.Nodes.Region;

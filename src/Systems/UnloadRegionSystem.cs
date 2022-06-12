@@ -22,7 +22,7 @@ public class UnloadRegionSystem : ISystem
             game.RemoveChild(region);
             region.QueueFree();
 
-            var query = commands.Query<Entity, Root>().Has<Spawned>();
+            var query = commands.Query<Entity, Root>().Has<IsSpawned>();
             
             foreach (var (entity, root) in query)
             {

@@ -1,5 +1,6 @@
 using Explore.Components;
 using Explore.Nodes;
+using Explore.Nodes.Actors;
 using Explore.Nodes.Region;
 using Godot;
 using RelEcs;
@@ -14,6 +15,11 @@ public class LoadRegion
 }
 
 public class RegionLoaded { }
+
+public class Spawned
+{
+    public Entity Entity;
+}
 
 public class LoadRegionSystem : ISystem 
 {
@@ -43,8 +49,8 @@ public class LoadRegionSystem : ISystem
                 var instance = spawner.Scene.Instance<Node2D>();
                 instance.Position = spawner.Position;
                 game.AddChild(instance);
-                commands.Spawn(instance).Add<Spawned>();
-                GD.Print("Spawned ", instance.Name);
+                var entity = commands.Spawn(instance).Add<IsSpawned>();
+                commands.Send(new Spawned { Entity = entity });
             }
             
             commands.Send(new RegionLoaded());
