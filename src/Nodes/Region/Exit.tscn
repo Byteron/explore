@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/Nodes/Region/Exit.cs" type="Script" id=1]
+
+[node name="Exit" type="Area2D"]
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[connection signal="body_entered" from="." to="." method="OnBodyEntered"]
