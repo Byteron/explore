@@ -18,7 +18,7 @@ public class AiSystem : ISystem
         foreach (var (entity, enemy, vision) in commands.Query<Entity, Enemy, Vision>().Has<Target>())
         {
             var distance = player.Position.DistanceTo(enemy.Position);
-            if (distance <= vision.Value * 1.5f && distance > 24) continue;
+            if (distance <= vision.Value * 1.2f && distance > 24) continue;
             entity.Remove<Target>();
         }
 
@@ -31,6 +31,12 @@ public class AiSystem : ISystem
         foreach (var (enemy, vel, speed, target) in commands.Query<Enemy, Velocity, Speed, Target>())
         {
             var direction = enemy.GlobalPosition.DirectionTo(target.Player.GlobalPosition);
+            vel.Value = direction * speed.Value;    
+        }
+        
+        foreach (var (enemy, vel, speed) in commands.Query<Enemy, Velocity, Speed>().Not<Target>())
+        {
+            var direction = enemy.GlobalPosition.DirectionTo(enemy.Origin);
             vel.Value = direction * speed.Value;    
         }
     }

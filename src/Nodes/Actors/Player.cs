@@ -7,6 +7,9 @@ namespace Explore.Nodes.Actors;
 
 public class Player : Character, ISpawnable
 {
+    [Signal]
+    public delegate void Strike();
+    
     public void Spawn(Entity entity)
     {
         entity

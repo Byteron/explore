@@ -7,30 +7,39 @@ using RelEcs.Godot;
 
 namespace Explore.Systems;
 
-public class PlayerAttackSystem : ISystem
+public class PlayerAttackSystem : Object, ISystem
 {
     public void Run(Commands commands)
     {
         if (!Input.IsActionJustPressed("attack")) return;
 
-        var query = commands.Query<Player, ScanArea2D, Strength>().Has<Controllable>();
-        foreach (var (player, scanArea, strength) in query)
+        var query = commands.Query<Player, ScanArea2D, Strength, AnimationPlayer>().Has<Controllable>();
+        foreach (var (player, scanArea, strength, anim) in query)
         {
-            GD.Print("Attack!");
+            if (anim.IsPlaying()) continue;
+            
+            Attack(commands, player, scanArea, strength, anim);
+        }
+    }
 
-            var areas = scanArea.GetOverlappingAreas();
+    async void Attack(Commands commands, Player player, ScanArea2D scanArea, Strength strength, AnimationPlayer anim)
+    {
+        anim.Play("attack");
 
-            foreach (Area2D area in areas)
-            {
-                if (area is not HitArea2D hitArea) continue;
+        await ToSignal(player, "Strike");
+        
+        var areas = scanArea.GetOverlappingAreas();
 
-                var meta = hitArea.Owner.GetMeta("Entity");
+        foreach (Area2D area in areas)
+        {
+            if (area is not HitArea2D hitArea) continue;
 
-                if (meta is not Marshallable<Entity> colliderEntity) continue;
+            var meta = hitArea.Owner.GetMeta("Entity");
 
-                var position = (hitArea.Owner as Node2D).Position;
-                commands.Send(new Damage(colliderEntity.Value, strength.Value, player.Position.DirectionTo(position)));
-            }
+            if (meta is not Marshallable<Entity> colliderEntity) continue;
+
+            var position = (hitArea.Owner as Node2D).Position;
+            commands.Send(new Damage(colliderEntity.Value, strength.Value, player.Position.DirectionTo(position)));
         }
     }
 }

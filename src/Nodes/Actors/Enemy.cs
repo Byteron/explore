@@ -15,8 +15,12 @@ public class Enemy : Character, ISpawnable
 
     HitArea2D _hitArea;
 
+    public Vector2 Origin;
+    
     public override void _Ready()
     {
+        Origin = Position;
+        
         _hitArea = GetNode<HitArea2D>("HitArea2D");
     }
 

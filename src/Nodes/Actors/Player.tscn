@@ -1,9 +1,68 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/Nodes/Actors/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://src/Nodes/Actors/Player.cs" type="Script" id=2]
 [ext_resource path="res://src/Nodes/Physics/ScanArea2D.tscn" type="PackedScene" id=3]
 [ext_resource path="res://src/Nodes/Physics/HitArea2D.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/graphics/images/attack.png" type="Texture" id=5]
+
+[sub_resource type="Animation" id=3]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("ScanArea2D/AttackSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ null ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "attack"
+length = 0.2
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("ScanArea2D/AttackSprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ ExtResource( 5 ), null ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("ScanArea2D/AttackSprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2 ]
+}
+tracks/2/type = "method"
+tracks/2/path = NodePath(".")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0.05 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [ "Strike" ],
+"method": "emit_signal"
+} ]
+}
 
 [sub_resource type="CapsuleShape2D" id=2]
 radius = 6.0
@@ -15,20 +74,22 @@ radius = 6.0
 [node name="Player" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
 
-[node name="ScanArea2D" parent="." index="2" instance=ExtResource( 3 )]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="0"]
+anims/RESET = SubResource( 3 )
+anims/attack = SubResource( 4 )
+
+[node name="ScanArea2D" parent="." index="3" instance=ExtResource( 3 )]
 position = Vector2( 0, -4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ScanArea2D" index="0"]
 position = Vector2( 13, 0 )
 shape = SubResource( 2 )
 
-[node name="ColorRect" type="ColorRect" parent="ScanArea2D/CollisionShape2D" index="0"]
-margin_left = -2.0
-margin_top = -2.0
-margin_right = 2.0
-margin_bottom = 2.0
+[node name="AttackSprite" type="Sprite" parent="ScanArea2D" index="1"]
+position = Vector2( 14, 0 )
+hframes = 3
 
-[node name="HitArea2D" parent="." index="3" instance=ExtResource( 4 )]
+[node name="HitArea2D" parent="." index="4" instance=ExtResource( 4 )]
 position = Vector2( 0, -4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitArea2D" index="0"]
