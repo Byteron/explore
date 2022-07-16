@@ -2,7 +2,6 @@ using Explore.Components;
 using Explore.Nodes.Actors;
 using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Systems;
 
@@ -20,38 +19,38 @@ public class Damage
     }
 }
 
-public class DamageSystem : ISystem
+public class DamageSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        commands.Receive((Damage damage) =>
+        Receive((Damage damage) =>
         {
-            if (!damage.Target.TryGet<Health>(out var health)) return;
+            if (!TryGetComponent<Health>(damage.Target, out var health)) return;
 
             health.Value -= damage.Amount;
 
-            if (damage.Target.TryGet<Force>(out var force))
+
+            if (TryGetComponent<Force>(damage.Target, out var force))
             {
                 force.Value = damage.Direction * (damage.Amount * 5 + 500f);
             }
 
-            if (damage.Target.TryGet<Stagger>(out var stagger))
+
+            if (TryGetComponent<Stagger>(damage.Target, out var stagger))
             {
                 stagger.Value = 0.2f;
             }
-            
-            GD.Print("Damage Dealt!");
 
             if (health.Value > 0) return;
 
-            if (damage.Target.Has<Player>())
+
+            if (HasComponent<Player>(damage.Target))
             {
-                commands.GetElement<SceneTree>().ReloadCurrentScene();
+                GetElement<SceneTree>().ReloadCurrentScene();
                 return;
             }
-            
-            damage.Target.DespawnAndFree();
-            GD.Print("DEATH!");
+
+            DespawnAndFree(damage.Target);
         });
     }
 }

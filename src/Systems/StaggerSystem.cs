@@ -5,13 +5,13 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class StaggerSystem : ISystem
+public class StaggerSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        if (!commands.TryGetElement<DeltaTime>(out var deltaTime)) return;
+        if (!TryGetElement<DeltaTime>(out var deltaTime)) return;
         
-        foreach (var stagger in commands.Query<Stagger>())
+        foreach (var stagger in Query<Stagger>())
         {
             stagger.Value = Mathf.Clamp(stagger.Value - deltaTime.Value, 0f, stagger.Value);
         }

@@ -7,25 +7,21 @@ using Explore.Nodes.Physics;
 
 namespace Explore.Systems;
 
-public class PlayerMoveSystem : ISystem
+public class PlayerMoveSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        var query = commands.Query<Velocity, ScanArea2D, Speed>().Has<Controllable>();
-        
+        var query = new QueryBuilder<Velocity, ScanArea2D, Speed>(World).Has<Controllable>().Build();
+
         foreach (var (vel, scanArea, speed) in query)
         {
-            var direction = GetMoveDirection();
+            var direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
             if (direction == Vector2.Zero) return;
-                
+
             scanArea.LookAt(scanArea.GlobalPosition + direction);
+            
             vel.Value = direction * speed.Value;
         }
-    }
-
-    static Vector2 GetMoveDirection()
-    {
-        return Input.GetVector("move_left", "move_right", "move_up", "move_down");
     }
 }

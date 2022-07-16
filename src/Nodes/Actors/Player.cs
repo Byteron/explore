@@ -1,7 +1,6 @@
 using Explore.Components;
 using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Nodes.Actors;
 
@@ -10,7 +9,7 @@ public class Player : Character, ISpawnable
     [Signal]
     public delegate void Strike();
     
-    public void Spawn(Entity entity)
+    public void Spawn(EntityBuilder entity)
     {
         entity
             .Add(this as KinematicBody2D)

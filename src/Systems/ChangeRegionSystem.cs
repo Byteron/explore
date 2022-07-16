@@ -4,30 +4,35 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class ChangeRegionSystem : Object, ISystem
-{
-    Commands _commands;
-    
-    public void Run(Commands commands)
+public class ChangeRegionSystem : GodotSystem
+{   
+    static readonly Functions F = new Functions();
+
+    public override void Run()
     {
-        _commands = commands;
+        F.World = World;
         
-        commands.Receive((RegionLoaded _) =>
+        Receive((RegionLoaded _) =>
         {
-            var region = commands.GetElement<Region>();
-            region.Connect(nameof(Region.Exited), this, nameof(OnRegionExited));
+            var region = GetElement<Region>();
+            region.Connect(nameof(Region.Exited), F, nameof(F.OnRegionExited));
         });
     }
 
-    async void OnRegionExited(string region, int exit)
+    class Functions : Object
     {
-        Fade.Instance.FadeOut();
-        await ToSignal(Fade.Instance, nameof(Fade.Finished));
+        public World World;
         
-        _commands.Send(new UnloadRegion());
-        _commands.Send(new LoadRegion { Region = region, Exit = exit });
-        
-        Fade.Instance.FadeIn();
-        await ToSignal(Fade.Instance, nameof(Fade.Finished));
+        public async void OnRegionExited(string region, int exit)
+        {
+            Fade.Instance.FadeOut();
+            await ToSignal(Fade.Instance, nameof(Fade.Finished));
+            
+            World.Send(new UnloadRegion());
+            World.Send(new LoadRegion { Region = region, Exit = exit });
+            
+            Fade.Instance.FadeIn();
+            await ToSignal(Fade.Instance, nameof(Fade.Finished));
+        }
     }
 }

@@ -1,10 +1,8 @@
 using Explore.Components;
-using Explore.Nodes;
 using Explore.Nodes.Actors;
 using Explore.Nodes.Region;
 using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Systems;
 
@@ -21,21 +19,21 @@ public class Spawned
     public Entity Entity;
 }
 
-public class LoadRegionSystem : ISystem 
+public class LoadRegionSystem : GodotSystem 
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        commands.Receive((LoadRegion t) =>
+        Receive((LoadRegion t) =>
         {
-            var game = commands.GetElement<Game>();
-            var player = commands.GetElement<Player>();
-            var camera = commands.GetElement<RegionCamera>();
+            var game = GetElement<Game>();
+            var player = GetElement<Player>();
+            var camera = GetElement<RegionCamera>();
             
             var region = GD.Load<PackedScene>($"data/regions/{t.Region}.tscn").Instance<Region>();
             
             game.AddChild(region);
             
-            commands.AddOrReplaceElement(region);
+            AddOrReplaceElement(region);
 
             camera.LimitTop = 0;
             camera.LimitLeft = 0;
@@ -49,11 +47,11 @@ public class LoadRegionSystem : ISystem
                 var instance = spawner.Scene.Instance<Node2D>();
                 instance.Position = spawner.Position;
                 game.AddChild(instance);
-                var entity = commands.Spawn(instance).Add<IsSpawned>();
-                commands.Send(new Spawned { Entity = entity });
+                var entity = Spawn(instance).Add<IsSpawned>().Id();
+                Send(new Spawned { Entity = entity });
             }
             
-            commands.Send(new RegionLoaded());
+            Send(new RegionLoaded());
         });
     }
 }

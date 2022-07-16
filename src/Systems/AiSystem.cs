@@ -9,32 +9,37 @@ public class Target
     public Player Player;
 }
 
-public class AiSystem : ISystem
+public class AiSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        if (!commands.TryGetElement<Player>(out var player)) return;
+        // get player node, which is sort of a unique component
+        if (!TryGetElement<Player>(out var player)) return;
         
-        foreach (var (entity, enemy, vision) in commands.Query<Entity, Enemy, Vision>().Has<Target>())
+        // check if any AI needs to have their target removed
+        foreach (var (entity, enemy, vision) in new QueryBuilder<Entity, Enemy, Vision>(World).Has<Target>().Build())
         {
             var distance = player.Position.DistanceTo(enemy.Position);
             if (distance <= vision.Value * 1.2f && distance > 24) continue;
-            entity.Remove<Target>();
+            On(entity).Remove<Target>();
         }
-
-        foreach (var (entity, enemy, vision) in commands.Query<Entity, Enemy, Vision>().Not<Target>())
+        
+        // check if any AI needs to have a target added
+        foreach (var (entity, enemy, vision) in new QueryBuilder<Entity, Enemy, Vision>(World).Not<Target>().Build())
         {
             if (player.Position.DistanceTo(enemy.Position) > vision.Value) continue;
-            entity.Add(new Target { Player = player });
+            On(entity).Add(new Target { Player = player });
         }
-
-        foreach (var (enemy, vel, speed, target) in commands.Query<Enemy, Velocity, Speed, Target>())
+        
+        // for every AI with target, move towards the target
+        foreach (var (enemy, vel, speed, target) in Query<Enemy, Velocity, Speed, Target>())
         {
             var direction = enemy.GlobalPosition.DirectionTo(target.Player.GlobalPosition);
             vel.Value = direction * speed.Value;    
         }
         
-        foreach (var (enemy, vel, speed) in commands.Query<Enemy, Velocity, Speed>().Not<Target>())
+        // if AI doesn't have a target, move back to it's original position
+        foreach (var (enemy, vel, speed) in new QueryBuilder<Enemy, Velocity, Speed>(World).Not<Target>().Build())
         {
             var direction = enemy.GlobalPosition.DirectionTo(enemy.Origin);
             vel.Value = direction * speed.Value;    

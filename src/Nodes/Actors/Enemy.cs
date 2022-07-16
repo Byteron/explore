@@ -2,7 +2,6 @@ using Explore.Components;
 using Explore.Nodes.Physics;
 using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Nodes.Actors;
 
@@ -24,7 +23,7 @@ public class Enemy : Character, ISpawnable
         _hitArea = GetNode<HitArea2D>("HitArea2D");
     }
 
-    public void Spawn(Entity entity)
+    public void Spawn(EntityBuilder entity)
     {
         entity
             .Add(this as KinematicBody2D)

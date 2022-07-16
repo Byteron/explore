@@ -2,15 +2,14 @@ using Explore.Core;
 using Explore.Nodes.Actors;
 using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Systems;
 
-public class InitPlayStateSystem : ISystem
+public class InitPlayStateSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        var state = commands.GetElement<GameState>();
+        var state = GetElement<GameState>();
         
         var game = GD.Load<PackedScene>("src/Nodes/Game.tscn").Instance<Game>();
         var camera = GD.Load<PackedScene>("src/Nodes/Region/RegionCamera.tscn").Instance<RegionCamera>();
@@ -23,12 +22,12 @@ public class InitPlayStateSystem : ISystem
         
         state.AddChild(game);
 
-        commands.Spawn(player);
+        Spawn(player);
 
-        commands.AddElement(game);
-        commands.AddElement(camera);
-        commands.AddElement(player);
+        AddElement(game);
+        AddElement(camera);
+        AddElement(player);
         
-        commands.Send(new LoadRegion { Region = "Mountains", Exit = -1 });
+        Send(new LoadRegion { Region = "Mountains", Exit = -1 });
     }
 }

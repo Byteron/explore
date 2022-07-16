@@ -3,38 +3,34 @@ using Explore.Nodes.Actors;
 using Explore.Nodes.Physics;
 using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Systems;
 
-public class EnemyAttackSystem : Object, ISystem
+public class EnemyAttackSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    Functions F = new Functions();
+
+    public override void Run()
     {
-        commands.Receive((Spawned spawned) =>
+        Receive((Spawned spawned) =>
         {
-            GD.Print("Spawned!");
-            if (!spawned.Entity.TryGet<Enemy>(out var enemy)) return;
+            if (!TryGetComponent<Enemy>(spawned.Entity, out var enemy)) return;
 
-            var e = new Marshallable<Entity>(spawned.Entity);
-            var c = new Marshallable<Commands>(commands);
-            var args = new Godot.Collections.Array { enemy, e, c };
+            var strength = GetComponent<Strength>(spawned.Entity);
+            var args = new Godot.Collections.Array { enemy, strength, new Marshallable<World>(World) };
 
-            enemy.Connect(nameof(Enemy.Contacted), this, nameof(OnEnemyContacted), args);
-            
-            GD.Print("Connected!");
+            enemy.Connect(nameof(Enemy.Contacted), F, nameof(Functions.OnEnemyContacted), args);
         });
     }
 
-    void OnEnemyContacted(Area2D area, Node2D enemy, Marshallable<Entity> enemyEntity, Marshallable<Commands> commands)
+    class Functions : Object
     {
-        GD.Print("Contacted!");
+        public void OnEnemyContacted(Area2D area, Node2D enemy, Strength strength, Marshallable<World> world)
+        {
+            var entity = ((Marshallable<Entity>)area.Owner.GetMeta("Entity")).Value;
+            var node = (Node2D)area.Owner;
 
-        var strength = enemyEntity.Value.Get<Strength>();
-        
-        var entity = ((Marshallable<Entity>)area.Owner.GetMeta("Entity")).Value;
-        var node = (Node2D)area.Owner;
-        
-        commands.Value.Send(new Damage(entity, strength.Value, enemy.Position.DirectionTo(node.Position)));
+            world.Value.Send(new Damage(entity, strength.Value, enemy.Position.DirectionTo(node.Position)));
+        }
     }
 }

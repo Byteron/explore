@@ -1,6 +1,6 @@
 namespace Explore.Components;
 
-public class Strength
+public class Strength : Godot.Object
 {
     public int Value;
 }

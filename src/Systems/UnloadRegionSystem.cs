@@ -1,8 +1,6 @@
 using Explore.Components;
 using Explore.Nodes.Region;
-using Godot;
 using RelEcs;
-using RelEcs.Godot;
 
 namespace Explore.Systems;
 
@@ -10,27 +8,22 @@ public class UnloadRegion
 {
 }
 
-public class UnloadRegionSystem : ISystem 
+public class UnloadRegionSystem : GodotSystem 
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        commands.Receive((UnloadRegion t) =>
+        Receive((UnloadRegion t) =>
         {
-            var game = commands.GetElement<Game>();
-            var region = commands.GetElement<Region>();
+            var game = GetElement<Game>();
+            var region = GetElement<Region>();
             
             game.RemoveChild(region);
             region.QueueFree();
 
-            var query = commands.Query<Entity, Root>().Has<IsSpawned>();
-            
-            foreach (var (entity, root) in query)
+            foreach (var entity in new QueryBuilder<Entity>(World).Has<IsSpawned>().Build())
             {
-                GD.Print("Despawned ", root.Node.Name);
-                entity.DespawnAndFree();
+                DespawnAndFree(entity);
             }
-            
-            GD.Print("Unload level");
         });
     }
 }

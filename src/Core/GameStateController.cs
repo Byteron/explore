@@ -39,7 +39,7 @@ public class GameStateController : Node
             return;
         }
         
-        World.Send(new GodotInput { Event = e });
+        World.Send(e);
     }
 
     public override void _Process(float delta)

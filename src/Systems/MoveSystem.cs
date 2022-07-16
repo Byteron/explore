@@ -4,16 +4,13 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class MoveSystem : ISystem
+public class MoveSystem : GodotSystem
 {
-    public void Run(Commands commands)
+    public override void Run()
     {
-        var query = commands.Query<KinematicBody2D, Velocity, Force, Stagger>();
-
+        var query = Query<KinematicBody2D, Velocity, Force, Stagger>();
         foreach (var (body, vel, force, stagger) in query)
         {
-            // GD.Print($"Move: {vel.Value} + {force.Value} + {vel.Value + force.Value}");
-            
             body.MoveAndSlide(stagger.Value > 0.01f ? force.Value : vel.Value + force.Value, Vector2.Zero);
 
             force.Value.x = Mathf.Lerp(force.Value.x, 0f, 0.1f);
