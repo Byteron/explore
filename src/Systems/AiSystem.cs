@@ -17,7 +17,7 @@ public class AiSystem : GodotSystem
         if (!TryGetElement<Player>(out var player)) return;
         
         // check if any AI needs to have their target removed
-        foreach (var (entity, enemy, vision) in new QueryBuilder<Entity, Enemy, Vision>(World).Has<Target>().Build())
+        foreach (var (entity, enemy, vision) in QueryBuilder<Entity, Enemy, Vision>().Has<Target>().Build())
         {
             var distance = player.Position.DistanceTo(enemy.Position);
             if (distance <= vision.Value * 1.2f && distance > 24) continue;
@@ -25,7 +25,7 @@ public class AiSystem : GodotSystem
         }
         
         // check if any AI needs to have a target added
-        foreach (var (entity, enemy, vision) in new QueryBuilder<Entity, Enemy, Vision>(World).Not<Target>().Build())
+        foreach (var (entity, enemy, vision) in QueryBuilder<Entity, Enemy, Vision>().Not<Target>().Build())
         {
             if (player.Position.DistanceTo(enemy.Position) > vision.Value) continue;
             On(entity).Add(new Target { Player = player });
@@ -39,7 +39,7 @@ public class AiSystem : GodotSystem
         }
         
         // if AI doesn't have a target, move back to it's original position
-        foreach (var (enemy, vel, speed) in new QueryBuilder<Enemy, Velocity, Speed>(World).Not<Target>().Build())
+        foreach (var (enemy, vel, speed) in QueryBuilder<Enemy, Velocity, Speed>().Not<Target>().Build())
         {
             var direction = enemy.GlobalPosition.DirectionTo(enemy.Origin);
             vel.Value = direction * speed.Value;    

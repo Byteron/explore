@@ -14,7 +14,7 @@ public class PlayerAttackSystem : GodotSystem
     {
         if (!Input.IsActionJustPressed("attack")) return;
 
-        var query = new QueryBuilder<Player, ScanArea2D, Strength, AnimationPlayer>(World).Has<Controllable>().Build();
+        var query = QueryBuilder<Player, ScanArea2D, Strength, AnimationPlayer>().Has<Controllable>().Build();
         foreach (var (player, scanArea, strength, anim) in query)
         {
             if (anim.IsPlaying()) continue;

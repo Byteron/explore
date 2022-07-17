@@ -20,7 +20,7 @@ public class UnloadRegionSystem : GodotSystem
             game.RemoveChild(region);
             region.QueueFree();
 
-            foreach (var entity in new QueryBuilder<Entity>(World).Has<IsSpawned>().Build())
+            foreach (var entity in QueryBuilder().Has<IsSpawned>().Build())
             {
                 DespawnAndFree(entity);
             }

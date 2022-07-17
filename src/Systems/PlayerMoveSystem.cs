@@ -11,7 +11,7 @@ public class PlayerMoveSystem : GodotSystem
 {
     public override void Run()
     {
-        var query = new QueryBuilder<Velocity, ScanArea2D, Speed>(World).Has<Controllable>().Build();
+        var query = QueryBuilder<Velocity, ScanArea2D, Speed>().Has<Controllable>().Build();
 
         foreach (var (vel, scanArea, speed) in query)
         {
