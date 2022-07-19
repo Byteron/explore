@@ -12,7 +12,7 @@ public class UnloadRegionSystem : GodotSystem
 {
     public override void Run()
     {
-        Receive((UnloadRegion t) =>
+        foreach (var t in Receive<UnloadRegion>())
         {
             var game = GetElement<Game>();
             var region = GetElement<Region>();
@@ -24,6 +24,6 @@ public class UnloadRegionSystem : GodotSystem
             {
                 DespawnAndFree(entity);
             }
-        });
+        }
     }
 }

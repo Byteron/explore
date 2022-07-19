@@ -12,11 +12,11 @@ public class ChangeRegionSystem : GodotSystem
     {
         F.World = World;
         
-        Receive((RegionLoaded _) =>
+        foreach (var _ in Receive<RegionLoaded>())
         {
             var region = GetElement<Region>();
             region.Connect(nameof(Region.Exited), F, nameof(F.OnRegionExited));
-        });
+        }
     }
 
     class Functions : Object

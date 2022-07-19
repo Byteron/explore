@@ -23,7 +23,7 @@ public class LoadRegionSystem : GodotSystem
 {
     public override void Run()
     {
-        Receive((LoadRegion t) =>
+        foreach (var t in Receive<LoadRegion>())
         {
             var game = GetElement<Game>();
             var player = GetElement<Player>();
@@ -52,6 +52,6 @@ public class LoadRegionSystem : GodotSystem
             }
             
             Send(new RegionLoaded());
-        });
+        }
     }
 }

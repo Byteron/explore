@@ -23,7 +23,7 @@ public class DamageSystem : GodotSystem
 {
     public override void Run()
     {
-        Receive((Damage damage) =>
+        foreach (var damage in Receive<Damage>())
         {
             if (!TryGetComponent<Health>(damage.Target, out var health)) return;
 
@@ -51,6 +51,6 @@ public class DamageSystem : GodotSystem
             }
 
             DespawnAndFree(damage.Target);
-        });
+        }
     }
 }

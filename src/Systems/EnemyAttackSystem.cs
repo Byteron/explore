@@ -12,7 +12,7 @@ public class EnemyAttackSystem : GodotSystem
 
     public override void Run()
     {
-        Receive((Spawned spawned) =>
+        foreach (var spawned in Receive<Spawned>())
         {
             if (!TryGetComponent<Enemy>(spawned.Entity, out var enemy)) return;
 
@@ -20,7 +20,7 @@ public class EnemyAttackSystem : GodotSystem
             var args = new Godot.Collections.Array { enemy, strength, new Marshallable<World>(World) };
 
             enemy.Connect(nameof(Enemy.Contacted), F, nameof(Functions.OnEnemyContacted), args);
-        });
+        }
     }
 
     class Functions : Object
