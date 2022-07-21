@@ -5,7 +5,7 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class InitPlayStateSystem : GodotSystem
+public class InitPlayStateSystem : GDSystem
 {
     public override void Run()
     {

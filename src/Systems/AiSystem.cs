@@ -9,7 +9,7 @@ public class Target
     public Player Player;
 }
 
-public class AiSystem : GodotSystem
+public class AiSystem : GDSystem
 {
     public override void Run()
     {

@@ -8,7 +8,7 @@ public class UnloadRegion
 {
 }
 
-public class UnloadRegionSystem : GodotSystem 
+public class UnloadRegionSystem : GDSystem 
 {
     public override void Run()
     {

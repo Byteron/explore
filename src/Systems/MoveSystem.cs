@@ -4,7 +4,7 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class MoveSystem : GodotSystem
+public class MoveSystem : GDSystem
 {
     public override void Run()
     {

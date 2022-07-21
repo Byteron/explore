@@ -19,7 +19,7 @@ public class Damage
     }
 }
 
-public class DamageSystem : GodotSystem
+public class DamageSystem : GDSystem
 {
     public override void Run()
     {

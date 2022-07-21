@@ -5,7 +5,7 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class StaggerSystem : GodotSystem
+public class StaggerSystem : GDSystem
 {
     public override void Run()
     {

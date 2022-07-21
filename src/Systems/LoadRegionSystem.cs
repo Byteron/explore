@@ -19,7 +19,7 @@ public class Spawned
     public Entity Entity;
 }
 
-public class LoadRegionSystem : GodotSystem 
+public class LoadRegionSystem : GDSystem 
 {
     public override void Run()
     {

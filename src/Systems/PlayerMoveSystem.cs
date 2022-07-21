@@ -7,7 +7,7 @@ using Explore.Nodes.Physics;
 
 namespace Explore.Systems;
 
-public class PlayerMoveSystem : GodotSystem
+public class PlayerMoveSystem : GDSystem
 {
     public override void Run()
     {
