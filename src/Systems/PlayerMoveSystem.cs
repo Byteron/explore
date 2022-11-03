@@ -7,11 +7,12 @@ using Explore.Nodes.Physics;
 
 namespace Explore.Systems;
 
-public class PlayerMoveSystem : GDSystem
+public class PlayerMoveSystem : ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        var query = QueryBuilder<Velocity, ScanArea2D, Speed>().Has<Controllable>().Build();
+        var query = World.Query<Velocity, ScanArea2D, Speed>().Has<Controllable>().Build();
 
         foreach (var (vel, scanArea, speed) in query)
         {

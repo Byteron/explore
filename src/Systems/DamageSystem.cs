@@ -19,24 +19,25 @@ public class Damage
     }
 }
 
-public class DamageSystem : GDSystem
+public class DamageSystem : ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        foreach (var damage in Receive<Damage>())
+        foreach (var damage in World.Receive<Damage>(this))
         {
-            if (!TryGetComponent<Health>(damage.Target, out var health)) return;
+            if (!World.TryGetComponent<Health>(damage.Target, out var health)) return;
 
             health.Value -= damage.Amount;
 
 
-            if (TryGetComponent<Force>(damage.Target, out var force))
+            if (World.TryGetComponent<Force>(damage.Target, out var force))
             {
                 force.Value = damage.Direction * (damage.Amount * 5 + 500f);
             }
 
 
-            if (TryGetComponent<Stagger>(damage.Target, out var stagger))
+            if (World.TryGetComponent<Stagger>(damage.Target, out var stagger))
             {
                 stagger.Value = 0.2f;
             }
@@ -44,13 +45,13 @@ public class DamageSystem : GDSystem
             if (health.Value > 0) return;
 
 
-            if (HasComponent<Player>(damage.Target))
+            if (World.HasComponent<Player>(damage.Target))
             {
-                GetElement<SceneTree>().ReloadCurrentScene();
+                World.GetElement<SceneTree>().ReloadCurrentScene();
                 return;
             }
 
-            DespawnAndFree(damage.Target);
+            World.DespawnAndFree(damage.Target);
         }
     }
 }

@@ -5,11 +5,12 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class InitPlayStateSystem : GDSystem
+public class InitPlayStateSystem : ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        var state = GetElement<GameState>();
+        var state = World.GetElement<GameState>();
         
         var game = GD.Load<PackedScene>("src/Nodes/Game.tscn").Instance<Game>();
         var camera = GD.Load<PackedScene>("src/Nodes/Region/RegionCamera.tscn").Instance<RegionCamera>();
@@ -22,12 +23,12 @@ public class InitPlayStateSystem : GDSystem
         
         state.AddChild(game);
 
-        Spawn(player);
+        World.Spawn(player);
 
-        AddElement(game);
-        AddElement(camera);
-        AddElement(player);
+        World.AddElement(game);
+        World.AddElement(camera);
+        World.AddElement(player);
         
-        Send(new LoadRegion { Region = "Mountains", Exit = -1 });
+        World.Send(new LoadRegion { Region = "Mountains", Exit = -1 });
     }
 }

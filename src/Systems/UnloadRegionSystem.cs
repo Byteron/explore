@@ -8,21 +8,22 @@ public class UnloadRegion
 {
 }
 
-public class UnloadRegionSystem : GDSystem 
+public class UnloadRegionSystem : ISystem 
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        foreach (var t in Receive<UnloadRegion>())
+        foreach (var t in World.Receive<UnloadRegion>(this))
         {
-            var game = GetElement<Game>();
-            var region = GetElement<Region>();
+            var game = World.GetElement<Game>();
+            var region = World.GetElement<Region>();
             
             game.RemoveChild(region);
             region.QueueFree();
 
-            foreach (var entity in QueryBuilder().Has<IsSpawned>().Build())
+            foreach (var entity in World.Query().Has<IsSpawned>().Build())
             {
-                DespawnAndFree(entity);
+                World.DespawnAndFree(entity);
             }
         }
     }

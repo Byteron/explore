@@ -1,31 +1,31 @@
 using Explore.Components;
 using Explore.Nodes.Actors;
-using Explore.Nodes.Physics;
 using Godot;
 using RelEcs;
 
 namespace Explore.Systems;
 
-public class EnemyAttackSystem : GDSystem
+public class EnemyAttackSystem : Reference, ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        foreach (var spawned in Receive<Spawned>())
+        foreach (var spawned in World.Receive<Spawned>(this))
         {
-            if (!TryGetComponent<Enemy>(spawned.Entity, out var enemy)) return;
+            if (!World.TryGetComponent<Enemy>(spawned.Entity, out var enemy)) return;
 
-            var strength = GetComponent<Strength>(spawned.Entity);
-            var args = new Godot.Collections.Array { enemy, strength, World };
+            var strength = World.GetComponent<Strength>(spawned.Entity);
+            var args = new Godot.Collections.Array { enemy, strength, new Marshallable<World>(World) };
 
             enemy.Connect(nameof(Enemy.Contacted), this, nameof(OnEnemyContacted), args);
         }
     }
 
-    public void OnEnemyContacted(Area2D area, Node2D enemy, Strength strength, World world)
+    public void OnEnemyContacted(Area2D area, Node2D enemy, Strength strength, Marshallable<World> world)
     {
-        var entity = (Entity)area.Owner.GetMeta("Entity");
+        var entity = (Marshallable<Entity>)area.Owner.GetMeta("Entity");
         var node = (Node2D)area.Owner;
 
-        world.Send(new Damage(entity, strength.Value, enemy.Position.DirectionTo(node.Position)));
+        world.Value.Send(new Damage(entity.Value, strength.Value, enemy.Position.DirectionTo(node.Position)));
     }
 }

@@ -6,13 +6,14 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class PlayerAttackSystem : GDSystem
+public class PlayerAttackSystem : Reference, ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
         if (!Input.IsActionJustPressed("attack")) return;
 
-        var query = QueryBuilder<Player, ScanArea2D, Strength, AnimationPlayer>().Has<Controllable>().Build();
+        var query = World.Query<Player, ScanArea2D, Strength, AnimationPlayer>().Has<Controllable>().Build();
         foreach (var (player, scanArea, strength, anim) in query)
         {
             if (anim.IsPlaying()) continue;
@@ -21,7 +22,7 @@ public class PlayerAttackSystem : GDSystem
         }
     }
 
-    public async void Attack(World world, Player player, ScanArea2D scanArea, Strength strength, AnimationPlayer anim)
+    async void Attack(World world, Player player, ScanArea2D scanArea, Strength strength, AnimationPlayer anim)
     {
         anim.Play("attack");
 
@@ -35,10 +36,10 @@ public class PlayerAttackSystem : GDSystem
 
             var meta = hitArea.Owner.GetMeta("Entity");
 
-            if (meta is not Entity colliderEntity) continue;
+            if (meta is not Marshallable<Entity> colliderEntity) continue;
             
             var position = (hitArea.Owner as Node2D).Position;
-            world.Send(new Damage(colliderEntity, strength.Value, player.Position.DirectionTo(position)));
+            world.Send(new Damage(colliderEntity.Value, strength.Value, player.Position.DirectionTo(position)));
         }
     }
 }

@@ -4,13 +4,14 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class ChangeRegionSystem : GDSystem
+public class ChangeRegionSystem : Reference, ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {   
-        foreach (var _ in Receive<RegionLoaded>())
+        foreach (var _ in World.Receive<RegionLoaded>(this))
         {
-            var region = GetElement<Region>();
+            var region = World.GetElement<Region>();
             region.Connect(nameof(Region.Exited), this, nameof(OnRegionExited));
         }
     }

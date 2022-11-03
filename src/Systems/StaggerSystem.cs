@@ -5,13 +5,14 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class StaggerSystem : GDSystem
+public class StaggerSystem : ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        if (!TryGetElement<DeltaTime>(out var deltaTime)) return;
+        if (!World.TryGetElement<DeltaTime>(out var deltaTime)) return;
         
-        foreach (var stagger in Query<Stagger>())
+        foreach (var stagger in World.Query<Stagger>().Build())
         {
             stagger.Value = Mathf.Clamp(stagger.Value - deltaTime.Value, 0f, stagger.Value);
         }

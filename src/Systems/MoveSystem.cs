@@ -4,11 +4,12 @@ using RelEcs;
 
 namespace Explore.Systems;
 
-public class MoveSystem : GDSystem
+public class MoveSystem : ISystem
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        var query = Query<KinematicBody2D, Velocity, Force, Stagger>();
+        var query = World.Query<KinematicBody2D, Velocity, Force, Stagger>().Build();
         foreach (var (body, vel, force, stagger) in query)
         {
             body.MoveAndSlide(stagger.Value > 0.01f ? force.Value : vel.Value + force.Value, Vector2.Zero);

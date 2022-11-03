@@ -19,21 +19,22 @@ public class Spawned
     public Entity Entity;
 }
 
-public class LoadRegionSystem : GDSystem 
+public class LoadRegionSystem : ISystem 
 {
-    public override void Run()
+    public World World { get; set; }
+    public void Run()
     {
-        foreach (var t in Receive<LoadRegion>())
+        foreach (var t in World.Receive<LoadRegion>(this))
         {
-            var game = GetElement<Game>();
-            var player = GetElement<Player>();
-            var camera = GetElement<RegionCamera>();
+            var game = World.GetElement<Game>();
+            var player = World.GetElement<Player>();
+            var camera = World.GetElement<RegionCamera>();
             
             var region = GD.Load<PackedScene>($"data/regions/{t.Region}.tscn").Instance<Region>();
             
             game.AddChild(region);
             
-            AddOrReplaceElement(region);
+            World.AddOrReplaceElement(region);
 
             camera.LimitTop = 0;
             camera.LimitLeft = 0;
@@ -47,11 +48,11 @@ public class LoadRegionSystem : GDSystem
                 var instance = spawner.Scene.Instance<Node2D>();
                 instance.Position = spawner.Position;
                 game.AddChild(instance);
-                var entity = Spawn(instance).Add<IsSpawned>().Id();
-                Send(new Spawned { Entity = entity });
+                var entity = World.Spawn(instance).Add<IsSpawned>().Id();
+                World.Send(new Spawned { Entity = entity });
             }
             
-            Send(new RegionLoaded());
+            World.Send(new RegionLoaded());
         }
     }
 }
